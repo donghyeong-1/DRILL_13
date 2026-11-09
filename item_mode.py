@@ -1,4 +1,4 @@
-from pico2d import load_image
+from pico2d import clear_canvas, load_image, update_canvas
 
 image = None
 
@@ -18,7 +18,9 @@ def update():
 
 
 def render():
-    pass
+    clear_canvas()
+    image.draw(400, 300)
+    update_canvas()
 
 
 def handle_events():
