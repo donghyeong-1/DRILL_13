@@ -29,3 +29,11 @@ class BigBall:
             BigBall.image = load_image('ball41x41.png')
         self.x, self.y = x, y
         self.velocity = velocity
+
+    def update(self):
+        self.x += self.velocity
+        if self.x < 0 or self.x > get_canvas_width():
+            game_world.remove_object(self)
+
+    def draw(self):
+        self.image.draw(self.x, self.y)
