@@ -1,7 +1,8 @@
 from pico2d import clear_canvas, get_events, load_image, update_canvas
-from sdl2 import SDL_KEYDOWN, SDL_QUIT, SDLK_ESCAPE, SDLK_i
+from sdl2 import SDL_KEYDOWN, SDL_QUIT, SDLK_0, SDLK_ESCAPE, SDLK_KP_0, SDLK_i
 import game_framework
 import game_world
+import play_mode
 
 image = None
 
@@ -34,6 +35,8 @@ def handle_events():
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key in (SDLK_i, SDLK_ESCAPE):
             game_framework.pop_mode()
+        elif event.type == SDL_KEYDOWN and event.key in (SDLK_0, SDLK_KP_0):
+            play_mode.boy.set_item(None)
 
 
 def pause():
