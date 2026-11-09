@@ -1,4 +1,5 @@
 from pico2d import clear_canvas, load_image, update_canvas
+import game_world
 
 image = None
 
@@ -19,6 +20,7 @@ def update():
 
 def render():
     clear_canvas()
+    game_world.render()
     image.draw(400, 300)
     update_canvas()
 
