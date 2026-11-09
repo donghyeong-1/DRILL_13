@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
+import item_mode
 import pause_mode
 import title_mode
 from boy import Boy
