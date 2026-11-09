@@ -19,3 +19,13 @@ class Ball:
 
     def draw(self):
         self.image.draw(self.x, self.y)
+
+
+class BigBall:
+    image = None
+
+    def __init__(self, x, y, velocity):
+        if BigBall.image is None:
+            BigBall.image = load_image('ball41x41.png')
+        self.x, self.y = x, y
+        self.velocity = velocity
