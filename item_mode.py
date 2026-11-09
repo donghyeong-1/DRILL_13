@@ -17,7 +17,7 @@ def finish():
 
 
 def update():
-    pass
+    game_world.update()
 
 
 def render():
