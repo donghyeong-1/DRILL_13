@@ -105,9 +105,9 @@ sequenceDiagram
 - `handle_events()`:
   - `SDL_QUIT`: `game_framework.quit()`
   - `SDLK_ESCAPE` 또는 `SDLK_i`: `game_framework.pop_mode()`
-  - `SDLK_0`: `play_mode.boy.set_ball_type(0)`
-  - `SDLK_1`: `play_mode.boy.set_ball_type(1)`
-  - `SDLK_2`: `play_mode.boy.set_ball_type(2)`
+  - `SDLK_0` / `SDLK_KP_0`: `play_mode.boy.set_item(None)`
+  - `SDLK_1` / `SDLK_KP_1`: `play_mode.boy.set_item('Ball')`
+  - `SDLK_2` / `SDLK_KP_2`: `play_mode.boy.set_item('BigBall')`
 - `update()`:
   - `game_world.update()`를 직접 호출하여 백그라운드 월드 시뮬레이션(공 이동, 캐릭터 상태 시간 업데이트) 지속
 - `render()`:
@@ -117,21 +117,23 @@ sequenceDiagram
   - `update_canvas()`
 
 #### (2) `ball.py`
-- `Ball` 클래스에서 볼 타입(`ball_type`) 또는 크기별 이미지를 지원하도록 개선:
-  - `type == 1`: `ball21x21.png` 로드, 충돌/반경 21x21 기준
-  - `type == 2`: `ball41x41.png` 로드, 충돌/반경 41x41 기준
-- 정적 이미지 캐싱을 통해 중복 로딩 방지 (`image21`, `image41`)
+- `Ball`(21x21 기본공) 및 `BigBall`(41x41 큰공) 클래스를 각각 정의:
+  - `Ball`: `ball21x21.png` 로드, 화면 경계 이탈 시 `game_world.remove_object(self)`
+  - `BigBall`: `ball41x41.png` 로드, 화면 경계 이탈 시 `game_world.remove_object(self)`
+- 클래스 변수(`Ball.image`, `BigBall.image`) 캐싱을 통해 중복 로딩 방지
 
 #### (3) `boy.py`
-- `self.ball_type = 1` 속성 추가 (기본값: 1번 기본공)
-- `set_ball_type(self, ball_type)` 메소드 추가
+- `self.item = 'Ball'` 속성 추가 (기본값: 기본공)
+- `set_item(self, item)` 메소드 추가 (`None`, `'Ball'`, `'BigBall'`)
 - `fire_ball(self)`:
-  - `self.ball_type == 0`인 경우 발사하지 않고 반환
-  - `self.ball_type`에 따라 해당하는 Ball 객체를 생성하여 `game_world.add_oject()`에 등록
+  - `self.item is None`인 경우 발사하지 않음
+  - `self.item == 'Ball'`인 경우 `Ball` 객체 생성 및 `game_world.add_oject()` 등록
+  - `self.item == 'BigBall'`인 경우 `BigBall` 객체 생성 및 `game_world.add_oject()` 등록
+- `update(self)`: `SLEEP` 상태에서도 프레임 애니메이션(`self.frame = (self.frame + 1) % 8`) 지속
 
 #### (4) `play_mode.py`
 - `handle_events()`에 `SDLK_i` 처리 추가 -> `game_framework.push_mode(item_mode)`
-- `resume()`: 아이템 모드에서 복귀 시 눌려 있던 키 버퍼 정리 및 상태 동기화
+- `pause()` / `resume()`: 하위 모드 진입 및 복귀 시 눌려 있던 키 버퍼 정리 및 이동 상태 동기화
 
 ---
 
@@ -186,13 +188,13 @@ sequenceDiagram
 
 ## 7. 검증 체크리스트
 
-- [ ] `i` 키 입력으로 아이템 모드 진입 및 해제가 원활히 이루어지는가?
-- [ ] 아이템 창(`item_select.png`)이 화면 중앙에 바르게 출력되는가?
-- [ ] 아이템 창이 열린 동안 공이 멈추지 않고 비행을 계속하는가?
-- [ ] 아이템 창이 열린 동안 소년 캐릭터가 시간 흐름에 맞춰 프레임 갱신 및 수면 전이를 수행하는가?
-- [ ] `0` 키 선택 시 스페이스바를 눌러도 공이 발사되지 않는가?
-- [ ] `1` 키 선택 시 기본 공(`ball21x21.png`)이 정상 발사되는가?
-- [ ] `2` 키 선택 시 큰 공(`ball41x41.png`)이 정상 발사되는가?
-- [ ] 최소 20개 이상의 유의미한 한글 커밋이 남았는가?
-- [ ] 원격 저장소가 Public으로 설정되어 있는가?
+- [x] `i` 키 입력으로 아이템 모드 진입 및 해제가 원활히 이루어지는가?
+- [x] 아이템 창(`item_select.png`)이 화면 중앙에 바르게 출력되는가?
+- [x] 아이템 창이 열린 동안 공이 멈추지 않고 비행을 계속하는가?
+- [x] 아이템 창이 열린 동안 소년 캐릭터가 시간 흐름에 맞춰 프레임 갱신 및 수면 전이를 수행하는가?
+- [x] `0` 키 선택 시 스페이스바를 눌러도 공이 발사되지 않는가?
+- [x] `1` 키 선택 시 기본 공(`ball21x21.png`)이 정상 발사되는가?
+- [x] `2` 키 선택 시 큰 공(`ball41x41.png`)이 정상 발사되는가?
+- [x] 최소 20개 이상의 유의미한 한글 커밋이 남았는가?
+- [x] 원격 저장소가 Public으로 설정되어 있는가?
 
