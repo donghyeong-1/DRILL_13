@@ -1,4 +1,6 @@
-from pico2d import clear_canvas, load_image, update_canvas
+from pico2d import clear_canvas, get_events, load_image, update_canvas
+from sdl2 import SDL_QUIT
+import game_framework
 import game_world
 
 image = None
@@ -26,7 +28,10 @@ def render():
 
 
 def handle_events():
-    pass
+    events = get_events()
+    for event in events:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
 
 
 def pause():
