@@ -1,9 +1,16 @@
+from pico2d import load_image
+
+image = None
+
+
 def init():
-    pass
+    global image
+    image = load_image('item_select.png')
 
 
 def finish():
-    pass
+    global image
+    del image
 
 
 def update():
