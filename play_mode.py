@@ -49,7 +49,10 @@ def finish():
 
 
 def pause():
-    pass
+    boy.pressed_keys.clear()
+    if boy.state == 'RUN':
+        boy.dir = 0
+        boy.stop_run()
 
 
 def resume():
