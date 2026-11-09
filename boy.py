@@ -94,6 +94,8 @@ class Boy:
             self.frame = (self.frame + 1) % 8
             self.x += self.dir * 5
             self.x = max(25, min(get_canvas_width() - 25, self.x))
+        elif self.state == 'SLEEP':
+            self.frame = (self.frame + 1) % 8
 
     def draw(self):
         if self.state == 'SLEEP':
